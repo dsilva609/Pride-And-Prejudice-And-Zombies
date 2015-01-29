@@ -44,4 +44,6 @@ public:
 	--set one thread to index at one range
 	--set another for another range
 	--save indexes to dictionary? vector of objects with: string name and int[] of locations
+	---create logic for accessing vector contents one thread at a time
+	---remove punctuation
 	*/
