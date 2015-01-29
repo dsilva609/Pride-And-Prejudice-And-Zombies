@@ -34,3 +34,14 @@ public:
 		return data;
 	}
 };
+
+/* METHOD OF EXECUTION
+	-read file
+	--read once to get length
+	--read a second time with threads to get lines at specific points
+	-send data to indexer
+	--send number of threads to be created
+	--set one thread to index at one range
+	--set another for another range
+	--save indexes to dictionary? vector of objects with: string name and int[] of locations
+	*/
