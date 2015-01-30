@@ -18,10 +18,20 @@ private:
 
 	void IndexData()
 	{
+		/* ALGORITHM
+			-needs
+			--start index
+			--end index
+			-start from start index
+			--detemine index locations for each word in string
+			--incement index per word not per line
+		*/
+
 		//test
 		string test = "It It is a truth universally acknowledged, that a single man in possession";
 
 		string currentWord;
+		int currentIndex = 0;
 		stringstream ss;
 
 		//for (int i = 0; i < this->_data.size(); i++)
@@ -39,7 +49,9 @@ private:
 			else
 				this->_dictionary[currentWord] = "5";
 			cout << this->_dictionary.find(currentWord)->second << endl;
+
 			currentWord.clear();
+			currentIndex++;
 		}
 		//}
 	}
