@@ -25,6 +25,7 @@ private:
 			-start from start index
 			--detemine index locations for each word in string
 			--incement index per word not per line
+			-sort ascending when finished
 		*/
 
 		//test
