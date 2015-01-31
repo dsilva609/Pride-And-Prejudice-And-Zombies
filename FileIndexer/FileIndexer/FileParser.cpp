@@ -45,8 +45,8 @@ public:
 			//{
 
 			//	//this needs to be threaded
-			//	for (map<string, string>::iterator i = data.begin(); i != data.end(); i++)
-			//		this->_stream << i->first + " " + i->second << endl;
+			for (map<string, string>::iterator i = data.begin(); i != data.end(); i++)
+				this->_stream << i->first + " " + i->second << endl;
 			//}
 		}
 		else
