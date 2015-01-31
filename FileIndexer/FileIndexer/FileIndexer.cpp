@@ -10,9 +10,8 @@ public:
 	{
 		this->_numThreads = numThreads;
 		//this->_data = this->_parser.Read(filename);
-		//this->DetermineIndices(numThreads);
-		//this->CreateThreads(numThreads);
-		//	this->IndexData();
+		//this->DetermineIndices();
+		this->CreateThreads();
 	}
 
 private:
@@ -23,7 +22,7 @@ private:
 	vector<thread> _threads;
 	vector<int> _indices;
 
-	void IndexData()
+	void IndexData(int threadID)
 	{
 		/* ALGORITHM
 			-needs
@@ -32,38 +31,43 @@ private:
 			-start from start index
 			--detemine index locations for each word in string
 			--incement index per word not per line
-			-sort ascending when finished
 
+			-map needs to be sort ascending when finished
+			-need to handle singluar write to map for threads
 			-need to handle rounding for division
 			*/
 
 		//test
-		string test = "It It is a truth universally acknowledged, that a single man in possession";
+		//string test = "It It is a truth universally acknowledged, that a single man in possession";
 
+
+		cout << "from thread: " << threadID << endl;
 		string currentWord;
-		int currentIndex = 0;
+		int currentIndex = this->_indices.at(threadID * 2);
+		int endIndex = this->_indices.at(threadID * 2 + 1);
 		stringstream ss;
 
-		//for (int i = 0; i < this->_data.size(); i++)
-		//{
-		//ss.str(this->_data.at(i));
-
-		ss.str(test);
-		while (ss.good())
+		for (int i = currentIndex; i < endIndex; i++)
 		{
-			ss >> currentWord;
-			cout << currentWord << endl;
+			ss.str(this->_data.at(i));
 
-			if (this->_dictionary.find(currentWord) != this->_dictionary.end())
-				this->_dictionary[currentWord] += " 9";
-			else
-				this->_dictionary[currentWord] = "5";
-			cout << this->_dictionary.find(currentWord)->second << endl;
+			//ss.str(test);
+			while (ss.good())
+			{
+				ss >> currentWord;
+				//	cout << currentWord << endl;
 
-			currentWord.clear();
-			currentIndex++;
+				if (this->_dictionary.find(currentWord) != this->_dictionary.end())
+					this->_dictionary[currentWord] += " " + to_string(currentIndex);
+				else
+					this->_dictionary[currentWord] = to_string(currentIndex);
+				//cout << this->_dictionary.find(currentWord)->second << endl;
+
+				currentWord.clear();
+				currentIndex++;
+			}
+			ss.clear();
 		}
-		//}
 	}
 
 	void DetermineIndices()
@@ -86,13 +90,8 @@ private:
 	{
 		for (int i = 0; i < this->_numThreads; i++)
 		{
-			this->_threads.push_back(thread(&FileIndexer::Created, this, i));
+			this->_threads.push_back(thread(&FileIndexer::IndexData, this, i));
 			this->_threads.at(i).join();
 		}
-	}
-
-	void Created(int num)
-	{
-		cout << "created thread " << num << endl;
 	}
 };
