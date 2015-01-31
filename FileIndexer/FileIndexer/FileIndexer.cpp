@@ -39,10 +39,6 @@ private:
 		-need to handle rounding for division
 		*/
 
-		//test
-		//string test = "It It is a truth universally acknowledged, that a single man in possession";
-
-
 		cout << "from thread: " << threadID << endl;
 		string currentWord;
 		int currentIndex = this->_indices.at(threadID * 2);
@@ -54,24 +50,15 @@ private:
 
 		for (int i = currentIndex; i < endIndex; i++)
 		{
-			//if (threadID == 4)
-			//	cout << "thread 4" << endl;
 			ss.str(this->_data.at(i));
+			//need lowercase
+			//need to create regular expression to remove non characters and split into words
 
-			//ss.str(test);
 			while (ss.good())
 			{
 				ss >> currentWord;
 
 				this->QueueWrite(threadID, currentWord, currentIndex);
-
-				//if (this->_dictionary.find(currentWord) != this->_dictionary.end())
-				//	this->_dictionary[currentWord] += this->QueueWrite(threadID, " " + to_string(currentIndex));
-				////this->_dictionary[currentWord] += " " + to_string(currentIndex);
-				//else
-				//	this->_dictionary[currentWord] = this->QueueWrite(threadID, to_string(currentIndex));
-				//this->_dictionary[currentWord] = to_string(currentIndex);
-
 
 				currentWord.clear();
 				currentIndex++;
@@ -111,10 +98,8 @@ private:
 	{
 		this->_writeLocked = true;
 
-		//cout << "writing from thread: " << threadID << endl;
 		if (this->_dictionary.find(key) != this->_dictionary.end())
 			this->_dictionary[key] += " " + to_string(value);
-		//this->_dictionary[currentWord] += " " + to_string(currentIndex);
 		else
 			this->_dictionary[key] = to_string(value);
 
@@ -123,10 +108,7 @@ private:
 
 	void QueueWrite(int threadID, string key, int value)
 	{
-		//cout << "from thread: " << threadID << endl;
-
 		while (this->_writeLocked)
-			//	continue;
 			cout << "write locked: " << this->_writeLocked << endl;
 
 		this->WriteData(threadID, key, value);

@@ -24,7 +24,6 @@ public:
 
 				data.push_back(this->_lineIn);
 			}
-			//stream.close();
 		}
 		else
 			cout << "ERROR: Could not open file: " << filename << endl;
@@ -41,13 +40,10 @@ public:
 		if (this->_stream.good())
 		{
 			cout << "Saving data to " << filename << "..." << endl;
-			//while (this->_stream.good())
-			//{
 
 			//	//this needs to be threaded
 			for (map<string, string>::iterator i = data.begin(); i != data.end(); i++)
 				this->_stream << i->first + " " + i->second << endl;
-			//}
 		}
 		else
 			cout << "ERROR: Could not open file: " << filename << endl;
