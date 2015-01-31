@@ -6,12 +6,13 @@
 class FileIndexer
 {
 public:
-	void Execute(string filename, int numThreads)
+	void Execute(string inputFilename, string outputFilename, int numThreads)
 	{
 		this->_numThreads = numThreads;
-		this->_data = this->_parser.Read(filename);
+		this->_data = this->_parser.Read(inputFilename);
 		this->DetermineIndices();
 		this->CreateThreads();
+		this->_parser.Write(outputFilename, this->_dictionary);
 	}
 
 private:
@@ -26,17 +27,17 @@ private:
 	void IndexData(int threadID)
 	{
 		/* ALGORITHM
-			-needs
-			--start index
-			--end index
-			-start from start index
-			--detemine index locations for each word in string
-			--incement index per word not per line
+		-needs
+		--start index
+		--end index
+		-start from start index
+		--detemine index locations for each word in string
+		--incement index per word not per line
 
-			-map needs to be sort ascending when finished
-			-need to handle singluar write to map for threads
-			-need to handle rounding for division
-			*/
+		-map needs to be sort ascending when finished
+		-need to handle singluar write to map for threads
+		-need to handle rounding for division
+		*/
 
 		//test
 		//string test = "It It is a truth universally acknowledged, that a single man in possession";
