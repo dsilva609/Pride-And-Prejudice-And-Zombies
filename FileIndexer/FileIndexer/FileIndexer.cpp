@@ -1,6 +1,7 @@
 #include <map>
 #include <sstream>
 #include <thread>
+#include <algorithm>
 #include "FileParser.cpp"
 
 class FileIndexer
@@ -50,7 +51,7 @@ private:
 
 		for (int i = currentIndex; i < endIndex; i++)
 		{
-			ss.str(this->_data.at(i));
+			ss.str(CleanString(this->_data.at(i)));
 			//need lowercase
 			//need to create regular expression to remove non characters and split into words
 
@@ -69,6 +70,15 @@ private:
 		cout << "thread " << threadID << " finished" << endl;
 	}
 
+	string CleanString(string str)
+	{
+		transform(str.begin(), str.end(), str.begin(), ::tolower);
+		replace_if(str.begin(), str.end(), not1(std::ptr_fun<int, int>(::isascii)), ' ');
+		replace_if(str.begin(), str.end(), not1(std::ptr_fun<int, int>(::isalpha)), ' ');
+		replace_if(str.begin(), str.end(), ::isblank, ' ');
+
+		return str;
+	}
 	void DetermineIndices()
 	{
 		int offset, endIndex;
@@ -94,6 +104,14 @@ private:
 		}
 	}
 
+	void QueueWrite(int threadID, string key, int value)
+	{
+		while (this->_writeLocked)
+			cout << "write locked: " << this->_writeLocked << endl;
+
+		this->WriteData(threadID, key, value);
+	}
+
 	void WriteData(int threadID, string key, int value)
 	{
 		this->_writeLocked = true;
@@ -104,13 +122,5 @@ private:
 			this->_dictionary[key] = to_string(value);
 
 		this->_writeLocked = false;
-	}
-
-	void QueueWrite(int threadID, string key, int value)
-	{
-		while (this->_writeLocked)
-			cout << "write locked: " << this->_writeLocked << endl;
-
-		this->WriteData(threadID, key, value);
 	}
 };
