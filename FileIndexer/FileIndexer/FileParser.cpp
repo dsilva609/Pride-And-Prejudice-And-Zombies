@@ -6,6 +6,13 @@
 
 using namespace std;
 
+struct Index
+{
+	string key;
+	map <int, int> values;
+
+};
+
 class FileParser
 {
 public:
@@ -33,7 +40,7 @@ public:
 		return data;
 	}
 
-	void Write(string filename, map<string, string> data)
+	void Write(string filename, map<string, Index> data)
 	{
 		this->_stream.open(filename);
 
@@ -42,8 +49,18 @@ public:
 			cout << "Saving data to " << filename << "..." << endl;
 
 			//	//this needs to be threaded
-			for (map<string, string>::iterator i = data.begin(); i != data.end(); i++)
-				this->_stream << i->first + " " + i->second << endl;
+			for (auto item : data)
+			{
+				this->_stream << item.first;
+				for (auto value : item.second.values)
+				{
+					this->_stream << " " + to_string(value.second);
+					//	cout << " " + to_string(value.second);
+				}
+				this->_stream << endl;
+				//	cout << endl;
+			}
+
 		}
 		else
 			cout << "ERROR: Could not open file: " << filename << endl;
