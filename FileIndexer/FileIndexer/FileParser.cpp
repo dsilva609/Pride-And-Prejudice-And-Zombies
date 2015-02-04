@@ -10,7 +10,6 @@ struct Index
 {
 	string key;
 	map <int, int> values;
-
 };
 
 class FileParser
@@ -52,15 +51,12 @@ public:
 			for (auto item : data)
 			{
 				this->_stream << item.first;
-				for (auto value : item.second.values)
-				{
-					this->_stream << " " + to_string(value.second);
-					//	cout << " " + to_string(value.second);
-				}
-				this->_stream << endl;
-				//	cout << endl;
-			}
 
+				for (auto value : item.second.values)
+					this->_stream << " " + to_string(value.second);
+
+				this->_stream << endl;
+			}
 		}
 		else
 			cout << "ERROR: Could not open file: " << filename << endl;

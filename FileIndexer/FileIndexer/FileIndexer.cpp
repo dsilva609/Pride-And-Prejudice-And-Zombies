@@ -45,7 +45,6 @@ private:
 		int currentIndex = this->_indices.at(threadID * 2);
 		int endIndex = this->_indices.at(threadID * 2 + 1);
 		stringstream ss;
-		Index index;
 
 		if (endIndex > this->_data.size())
 			endIndex = this->_data.size();
@@ -59,15 +58,10 @@ private:
 			while (ss.good())
 			{
 				ss >> currentWord;
-				index.key = currentWord;
-				index.values.insert(make_pair(currentIndex, currentIndex));
-
-				this->QueueWrite(threadID, index);
+				this->QueueWrite(threadID, currentWord, currentIndex);
 
 				currentWord.clear();
 				currentIndex++;
-				index.key.clear();
-				index.values.clear();
 			}
 			ss.clear();
 		}
@@ -109,39 +103,23 @@ private:
 		}
 	}
 
-	void QueueWrite(int threadID, Index index)
+	void QueueWrite(int threadID, string key, int value)
 	{
 		while (this->_writeLocked)
 			cout << "write locked: " << this->_writeLocked << endl;
 
-		this->WriteData(threadID, index);
+		this->WriteData(threadID, key, value);
 	}
 
-	void WriteData(int threadID, Index index)
+	void WriteData(int threadID, string key, int value)
 	{
-		map<int, int> temp;
-
 		this->_writeLocked = true;
 
-		if (this->_dictionary.find(index.key) != this->_dictionary.end())
-		{
-			temp = this->_dictionary[index.key].values;
-			this->_dictionary.erase(index.key);
-			temp.insert(make_pair(index.values[0], index.values[0]));
-			//index.values = temp;
-			this->_dictionary.insert(make_pair(index.key, index));
-			//this->_dictionary[index.key].key = index.key;
-			//this->_dictionary[index.key].values = temp;
-			//this->_dictionary.find(index.key)->->second.values.insert(make_pair(index.values.at(0), index.values.at(0)));
-			//this->_dictionary[index.key].values.insert(make_pair(index.values.at(0), index.values.at(0)));
-			temp.clear();
-		}
-		else
-			this->_dictionary[index.key] = index;
+		if (this->_dictionary.find(key) == this->_dictionary.end())
+			this->_dictionary[key].key = key;
+
+		this->_dictionary[key].values.insert(make_pair(value, value));
 
 		this->_writeLocked = false;
-
-		//	index.key.clear();
-		//index.values.clear();
 	}
 };
