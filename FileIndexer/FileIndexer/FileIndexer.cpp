@@ -20,7 +20,7 @@ private:
 	FileParser _parser;
 	vector<string> _data;
 	int _numThreads;
-	map<string, string> _dictionary;
+	map<string, Index> _dictionary;
 	vector<thread> _threads;
 	vector<int> _indices;
 	bool _writeLocked = false;
@@ -58,7 +58,6 @@ private:
 			while (ss.good())
 			{
 				ss >> currentWord;
-
 				this->QueueWrite(threadID, currentWord, currentIndex);
 
 				currentWord.clear();
@@ -116,10 +115,10 @@ private:
 	{
 		this->_writeLocked = true;
 
-		if (this->_dictionary.find(key) != this->_dictionary.end())
-			this->_dictionary[key] += " " + to_string(value);
-		else
-			this->_dictionary[key] = to_string(value);
+		if (this->_dictionary.find(key) == this->_dictionary.end())
+			this->_dictionary[key].key = key;
+
+		this->_dictionary[key].values.insert(make_pair(value, value));
 
 		this->_writeLocked = false;
 	}
