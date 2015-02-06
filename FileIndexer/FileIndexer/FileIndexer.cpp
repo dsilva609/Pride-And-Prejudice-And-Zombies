@@ -33,6 +33,7 @@ private:
 	vector<thread> _threads;
 	vector<int> _indices;
 	bool _writeLocked = false;
+	int wordIndex = 0;
 
 	void IndexData(int threadID)
 	{
@@ -68,10 +69,11 @@ private:
 			{
 				ss >> currentWord;
 				if (this->_exclusionDictionary.find(currentWord) == this->_exclusionDictionary.end())
-					this->QueueWrite(threadID, currentWord, currentIndex);
+					this->QueueWrite(threadID, currentWord, wordIndex);
 
 				currentWord.clear();
 				currentIndex++;
+				wordIndex++;
 			}
 			ss.clear();
 		}
