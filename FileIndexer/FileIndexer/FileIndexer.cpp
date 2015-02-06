@@ -11,16 +11,25 @@ public:
 	{
 		this->_numThreads = numThreads;
 		this->_data = this->_parser.Read(inputFilename);
+		this->_exclusionData = this->_parser.Read("ExclusionList.txt");
+		this->CompileExclusionDictionary();
 		this->DetermineIndices();
 		this->CreateThreads();
 		this->_parser.Write(outputFilename, this->_dictionary);
+
+		this->_data.clear();
+		this->_exclusionData.clear();
+		this->_dictionary.clear();
+		this->_exclusionDictionary.clear();
 	}
 
 private:
 	FileParser _parser;
 	vector<string> _data;
+	vector<string> _exclusionData;
 	int _numThreads;
 	map<string, Index> _dictionary;
+	map<string, string> _exclusionDictionary;
 	vector<thread> _threads;
 	vector<int> _indices;
 	bool _writeLocked = false;
@@ -58,7 +67,8 @@ private:
 			while (ss.good())
 			{
 				ss >> currentWord;
-				this->QueueWrite(threadID, currentWord, currentIndex);
+				if (this->_exclusionDictionary.find(currentWord) == this->_exclusionDictionary.end())
+					this->QueueWrite(threadID, currentWord, currentIndex);
 
 				currentWord.clear();
 				currentIndex++;
@@ -78,6 +88,13 @@ private:
 
 		return str;
 	}
+
+	void CompileExclusionDictionary()
+	{
+		for (auto item : this->_exclusionData)
+			this->_exclusionDictionary.insert(make_pair(item, item));
+	}
+
 	void DetermineIndices()
 	{
 		int offset, endIndex;

@@ -32,5 +32,8 @@
     <Text Include="Output.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="ExclusionList.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
