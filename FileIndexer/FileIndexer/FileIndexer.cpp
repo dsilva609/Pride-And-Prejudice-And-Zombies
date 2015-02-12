@@ -7,11 +7,12 @@
 class FileIndexer
 {
 public:
-	void Execute(string inputFilename, string outputFilename, int numThreads)
+	void Execute(string inputFilename, string outputFilename, string exemptListFilename, int numThreads)
 	{
 		this->_numThreads = numThreads;
 		this->_data = this->_parser.Read(inputFilename);
-		this->_exclusionData = this->_parser.Read("ExclusionList.txt");
+		if (exemptListFilename != "")
+			this->_exclusionData = this->_parser.Read(exemptListFilename);
 		this->CompileExclusionDictionary();
 		this->DetermineIndices();
 		this->CreateThreads();

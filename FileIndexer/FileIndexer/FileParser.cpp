@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <algorithm>
 
 using namespace std;
 
@@ -27,7 +28,7 @@ public:
 			while (this->_stream.good())
 			{
 				getline(this->_stream, this->_lineIn);
-
+				transform(this->_lineIn.begin(), this->_lineIn.end(), this->_lineIn.begin(), ::tolower);
 				data.push_back(this->_lineIn);
 			}
 		}
@@ -68,7 +69,6 @@ private:
 	fstream _stream;
 	string _lineIn;
 	string _temp;
-
 };
 
 /* METHOD OF EXECUTION

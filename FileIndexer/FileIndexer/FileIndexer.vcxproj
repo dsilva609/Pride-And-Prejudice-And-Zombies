@@ -81,9 +81,9 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ExclusionList.txt" />
+    <Text Include="ExemptWordsSorted.txt" />
+    <Text Include="mobydick.txt" />
     <Text Include="Output.txt" />
-    <Text Include="PrideAndPrejudice.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

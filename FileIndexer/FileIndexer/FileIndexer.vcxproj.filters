@@ -26,13 +26,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="PrideAndPrejudice.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
     <Text Include="Output.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="ExclusionList.txt">
+    <Text Include="ExemptWordsSorted.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="mobydick.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
