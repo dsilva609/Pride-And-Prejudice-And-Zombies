@@ -109,7 +109,10 @@ private:
 		{
 			endIndex += offset;
 			this->_indices.push_back(endIndex - offset);
-			this->_indices.push_back(endIndex);
+			if (i == this->_numThreads)
+				endIndex = this->_data.size();
+			else
+				this->_indices.push_back(endIndex);
 			endIndex++;
 		}
 	}
