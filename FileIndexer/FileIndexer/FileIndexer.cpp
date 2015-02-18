@@ -35,8 +35,10 @@ private:
 	vector<int> _indices;
 	bool _writeLocked = false;
 	int wordIndex = 0;
+	int _numThreadsRunning = this->_numThreads;
+	thread _waitThread;
 
-	void IndexData(int threadID)
+	void IndexData(int threadID, int start, int end)
 	{
 		/* ALGORITHM
 		-needs
@@ -53,8 +55,8 @@ private:
 
 		cout << "from thread: " << threadID << endl;
 		string currentWord;
-		int currentIndex = this->_indices.at(threadID * 2);
-		int endIndex = this->_indices.at(threadID * 2 + 1);
+		int currentIndex = start;// this->_indices.at(threadID * 2);
+		int endIndex = end;// this->_indices.at(threadID * 2 + 1);
 		stringstream ss;
 
 		if (endIndex > this->_data.size())
@@ -77,6 +79,7 @@ private:
 			ss.clear();
 		}
 
+		this->_numThreadsRunning--;
 		cout << "thread " << threadID << " finished" << endl;
 	}
 
@@ -117,17 +120,18 @@ private:
 
 	void CreateThreads()
 	{
+		this->_waitThread = thread(&FileIndexer::WaitForThreadsToComplete, this);
+
 		for (int i = 0; i < this->_numThreads; i++)
-		{
-			this->_threads.push_back(thread(&FileIndexer::IndexData, this, i));
-			this->_threads.at(i).join();
-		}
+			this->_threads.push_back(thread(&FileIndexer::IndexData, this, i, this->_indices.at(i * 2), this->_indices.at(i * 2 + 1)));
+
+		this->_waitThread.join();
 	}
 
 	void QueueWrite(int threadID, string key, int value)
 	{
 		while (this->_writeLocked)
-			cout << "write locked: " << this->_writeLocked << endl;
+			this->_writeLocked = false;
 
 		this->WriteData(threadID, key, value);
 	}
@@ -142,5 +146,18 @@ private:
 		this->_dictionary[key].values.insert(make_pair(value, value));
 
 		this->_writeLocked = false;
+	}
+
+	void WaitForThreadsToComplete()
+	{
+		cout << "waiting for threads complete..." << endl;
+		while (this->_numThreadsRunning > 0)
+			this->_numThreadsRunning = this->_numThreadsRunning;
+
+		cout << "all threads completed" << endl;
+		//then join all threads including wait thread
+
+		for (int i = 0; i < this->_numThreads; i++)
+			this->_threads[i].join();
 	}
 };
