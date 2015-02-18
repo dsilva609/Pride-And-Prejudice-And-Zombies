@@ -48,7 +48,6 @@ public:
 		{
 			cout << "Saving data to " << filename << "..." << endl;
 
-			//	//this needs to be threaded
 			for (auto item : data)
 			{
 				this->_stream << item.first;

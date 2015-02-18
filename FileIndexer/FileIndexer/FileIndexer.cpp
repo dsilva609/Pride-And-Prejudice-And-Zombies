@@ -63,8 +63,6 @@ private:
 		for (int i = currentIndex; i < endIndex; i++)
 		{
 			ss.str(CleanString(this->_data.at(i)));
-			//need lowercase
-			//need to create regular expression to remove non characters and split into words
 
 			while (ss.good())
 			{
